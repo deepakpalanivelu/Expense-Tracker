@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Expense Tracker</string>
+    <string name="login">Login </string>
+    <string name="tagline">Money management made simple</string>
+    <string name="signup_tag">No account yet? Create one</string>
+    <string name="login_tag">Already have an account? Login</string>
+    <string name="signup"> Sign up </string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="title_activity_home">HomeActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+</resources>
