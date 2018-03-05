@@ -89,7 +89,7 @@ public class LoginActivity extends Activity  {
         String pass = password.getText().toString();
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            userName.setError("enter a valid email address");
+            userName.setError("Enter a valid email address");
             valid = false;
         } else {
             userName.setError(null);
