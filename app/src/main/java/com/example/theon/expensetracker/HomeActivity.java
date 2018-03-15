@@ -8,6 +8,7 @@ import com.github.mikephil.charting.data.BarEntry;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -21,18 +22,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageButton;
-
-
-//import com.github.mikephil.charting.charts.BarChart;
-//import com.github.mikephil.charting.data.BarData;
-//import com.github.mikephil.charting.data.BarDataSet;
-//import com.github.mikephil.charting.data.BarEntry;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Random;
 
@@ -50,7 +43,7 @@ public class HomeActivity extends AppCompatActivity
     private static final int NUM_PAGES = 2;
     private ViewPager mPager;
     private PagerAdapter mPagerAdapter;
-
+    Fragment fragment = null;
 
 
     @Override
