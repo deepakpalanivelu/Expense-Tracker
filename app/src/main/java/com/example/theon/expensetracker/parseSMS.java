@@ -31,6 +31,7 @@ public class parseSMS extends AppCompatActivity {
 
     ArrayAdapter arrayAdapter;
     ArrayList<String> smsMessagesList;
+    ArrayList<String> banksList;
     private static final int REQUEST_DISPLAY_SMS=4;
 
     public  static final int RequestPermissionCode  = 1 ;
@@ -50,6 +51,8 @@ public class parseSMS extends AppCompatActivity {
         startActivityForResult(intent1, REQUEST_DISPLAY_SMS);*/
         //SMS READING CODE
         smsMessagesList = new ArrayList<String>();
+        banksList = new ArrayList<String>();
+        banksList.add("Discover");
         smsMessagesList.clear();
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(parseSMS.this, android.Manifest.permission.READ_SMS)) {
@@ -114,7 +117,7 @@ public class parseSMS extends AppCompatActivity {
             ArrayList<String> al = new ArrayList<String>(Arrays.asList(sms_each));
 
             String message = "";
-            if(sms_each[0].contains("Discover")) {
+            if(banksList.contains(sms_each[0])) {
 
                 String bank = sms_each[0];
                 String location = "";
@@ -129,8 +132,7 @@ public class parseSMS extends AppCompatActivity {
                         location+=sms_each[i+1];
                     }
                     if(i+2 < al.size()) {
-                        location+=" "+sms_each[i+2];
-                        Log.d("CATEgOry",""+sms_each[i+2]);
+                        //location+=" "+sms_each[i+2];
                         if (sms_each[i+2].contains("STORE")) {
                             category = "Shopping";
                         } else if(sms_each[i+2].contains("RESTAURANT")) {

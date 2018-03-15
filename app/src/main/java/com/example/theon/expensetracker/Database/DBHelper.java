@@ -66,7 +66,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Cursor getAllData() {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        Cursor res = db.rawQuery("SELECT * FROM " + TABLE_NAME+ " ORDER BY "+COL_1+" DESC", null);
         return res;
     }
 

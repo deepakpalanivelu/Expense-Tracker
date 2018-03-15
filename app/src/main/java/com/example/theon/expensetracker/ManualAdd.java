@@ -175,6 +175,7 @@ public class ManualAdd extends AppCompatActivity {
         list3.add("Other");
         list3.add("Dining");
         list3.add("Travel");
+        list3.add("Entertainment");
         list3.add("Gas");
         updateSpinner(list3, categorySpinner);
 
@@ -202,7 +203,10 @@ public class ManualAdd extends AppCompatActivity {
             String category = categorySpinner.getSelectedItem().toString();
             DBHelper dbhelper = new DBHelper(this);
             Log.d("TAG", storeName + " " + date + " " + cost + " " + category);
-            dbhelper.insertData("Discover", storeName, date, cost,category,"credit");
+            boolean added = dbhelper.insertData("Discover", storeName, date, cost,category,"debit");
+            if(added) {
+                Log.d("IMAGEADD","SUCCESSSSSS");
+            }
             finish();
         }
     }

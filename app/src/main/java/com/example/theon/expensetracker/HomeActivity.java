@@ -8,6 +8,7 @@ import com.github.mikephil.charting.data.BarEntry;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -90,18 +91,23 @@ public class HomeActivity extends AppCompatActivity
         addTrigger = findViewById(R.id.add);
         barChart = (BarChart) findViewById(R.id.bargraph);
 
-        createRandomBarGraph("2016/05/05", "2016/06/01");
 
-        populateexpenses();
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_SMS)) {
+            Toast.makeText(this, "Permission needed to access your sms", Toast.LENGTH_LONG).show();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_SMS}, 1);
+        }
 
         addTrigger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ManualAdd.class);
-                startActivity(intent);
+                Intent intent = new Intent(HomeActivity.this, ManualAdd.class);
+                startActivityForResult(intent,0);
             }
         });
 
+        populateexpenses();
+        createRandomBarGraph("2016/05/05", "2016/06/01");
 
         smsTrigger = findViewById(R.id.parsesms);
         smsTrigger.setOnClickListener(new View.OnClickListener() {
@@ -173,17 +179,19 @@ public class HomeActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        populateexpenses();
         Toast.makeText(this, "Refreshed", Toast.LENGTH_LONG).show();
 
+        populateexpenses();
+        createRandomBarGraph("2016/05/05", "2016/06/01");
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if(intent.getStringExtra("methodName").equals("myMethod")){
-            Toast.makeText(this, "Refreshed", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Refreshed!", Toast.LENGTH_LONG).show();
             populateexpenses();
+            createRandomBarGraph("2016/05/05", "2016/06/01");
 
         }
     }
@@ -196,17 +204,15 @@ public class HomeActivity extends AppCompatActivity
 
         Cursor res = dbHelper.getAllData();
         if(res.getCount()==0){
-            Log.d("DATABASE:","EMPTY!!!!!!!!!!!!!!!!!");
+            Log.d("DATABASE:","EMPTY!!");
             return;
         }
         while (res.moveToNext()) {
             StringBuffer entry = new StringBuffer();
-            entry.append("Bank : " + res.getString(1) + "\n");
-            entry.append("Location : " + res.getString(2) + "\n");
-            entry.append("Date : " + res.getString(3) + "\n");
-            entry.append("Cost : " + res.getString(4) + "\n");
+            entry.append("" + res.getString(2) + "\n");
+            entry.append(res.getString(4) + "\n");
+            entry.append("" + res.getString(1) + "  -  "+res.getString(3)+"\n");
             entry.append("Category : " + res.getString(5) + "\n");
-            entry.append("Type : " + res.getString(6));
 
             smsMessagesList.add(entry.toString());
         }
@@ -221,7 +227,7 @@ public class HomeActivity extends AppCompatActivity
 
     public void createRandomBarGraph(String Date1, String Date2){
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        /*SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
         try {
             Date date1 = simpleDateFormat.parse(Date1);
@@ -253,43 +259,44 @@ public class HomeActivity extends AppCompatActivity
 
         }catch(ParseException e){
             e.printStackTrace();
-        }
-//        DBHelper dbHelper = new DBHelper(this);
-//
-//        Cursor res = dbHelper.getAllData();
-//        if(res.getCount()==0){
-//            Log.d("DATABASE:","EMPTY!!!!!!!!!!!!!!!!!");
-//            return;
-//        }
-//        int i = 0;
-//        barEntries = new ArrayList<>();
-//        dates = new ArrayList<>();
-//        while (res.moveToNext()) {
-//            StringBuffer entry = new StringBuffer();
-//            entry.append("Id : " + res.getString(0) + "\n");
-//            entry.append("Bank : " + res.getString(1) + "\n");
-//            entry.append("Location : " + res.getString(2) + "\n");
-//            entry.append("Date : " + res.getString(3) + "\n");
-//            entry.append("Cost : " + res.getString(4) + "\n");
-//            entry.append("Category : " + res.getString(5) + "\n");
-//            entry.append("Type : " + res.getString(6));
-//            Log.d("Debugging", res.getString(3) + " chec " + res.getString(4));
-//            if(res.getString(4).length() != 0 && res.getString(3).length() != 0 ) {
-//                barEntries.add(new BarEntry(Float.parseFloat(res.getString(4).replace("$","").replace(",","")), i));
-//                dates.add(res.getString(3));
-//            }
-//            i++;
-//
-//
-//        }
-//
-//
-//        Collections.reverse(dates);
-//        Collections.reverse(barEntries);
-//        for(int a = 0; a < dates.size();a++) {
-//            Log.d("reverse" , dates.get(a));
-//        }
+        }*/
+        DBHelper dbHelper = new DBHelper(this);
 
+        Cursor res = dbHelper.getAllData();
+        if(res.getCount()==0){
+            Log.d("DATABASE:","EMPTY!!!!!!!!!!!!!!!!!");
+            return;
+        }
+        int i = 0;
+        barEntries = new ArrayList<>();
+        dates = new ArrayList<>();
+        while (res.moveToNext()) {
+            StringBuffer entry = new StringBuffer();
+            entry.append("Id : " + res.getString(0) + "\n");
+            entry.append("Bank : " + res.getString(1) + "\n");
+            entry.append("Location : " + res.getString(2) + "\n");
+            entry.append("Date : " + res.getString(3) + "\n");
+            entry.append("Cost : " + res.getString(4) + "\n");
+            entry.append("Category : " + res.getString(5) + "\n");
+            entry.append("Type : " + res.getString(6));
+            Log.d("Debugging", res.getString(3) + " chec " + res.getString(4));
+            if(res.getString(4).length() != 0 && res.getString(3).length() != 0 ) {
+                barEntries.add(new BarEntry(Float.parseFloat(res.getString(4).replace("$","").replace(",","")), i));
+                dates.add(res.getString(3));
+            }
+            i++;
+
+
+        }
+
+
+        Collections.reverse(dates);
+        Collections.reverse(barEntries);
+        for(int a = 0; a < dates.size();a++) {
+            Log.d("reverse" , dates.get(a));
+        }
+
+        //barChart.clear();
         BarDataSet barDataSet = new BarDataSet(barEntries,"Dates");
         BarData barData = new BarData(dates, barDataSet);
         barChart.setData(barData);
