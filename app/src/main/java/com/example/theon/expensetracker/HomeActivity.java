@@ -38,6 +38,8 @@ import java.util.Random;
 public class HomeActivity extends FragmentActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private ImageButton smsTrigger;
+    private static final int REQUEST_READ_SMS = 2;
     private ImageButton addTrigger;
     BarChart barChart;
     ArrayList<String> dates;
@@ -78,6 +80,16 @@ public class HomeActivity extends FragmentActivity
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ManualAdd.class);
                 startActivity(intent);
+            }
+        });
+
+
+        smsTrigger = findViewById(R.id.parsesms);
+        smsTrigger.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), parseSMS.class);
+                startActivityForResult(intent,REQUEST_READ_SMS);
             }
         });
     }
