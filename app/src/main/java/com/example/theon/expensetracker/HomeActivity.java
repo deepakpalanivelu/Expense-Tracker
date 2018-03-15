@@ -1,10 +1,15 @@
 package com.example.theon.expensetracker;
+import com.example.theon.expensetracker.Database.DBHelper;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -32,6 +37,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Random;
 import com.example.theon.expensetracker.Database.DBHelper;
@@ -56,6 +62,11 @@ public class HomeActivity extends AppCompatActivity
             R.drawable.ic_movie_filter_black_84dp,
             R.drawable.ic_local_gas_station_black_84dp
     };
+    private static String TAG = "HomeActivity.class";
+    private static final int NUM_PAGES = 2;
+    private ViewPager mPager;
+    private PagerAdapter mPagerAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +76,8 @@ public class HomeActivity extends AppCompatActivity
         smsListView = (ListView) findViewById(R.id.expenseslist);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -145,6 +158,8 @@ public class HomeActivity extends AppCompatActivity
         } else if (id == R.id.balance) {
 
         } else if (id == R.id.settings) {
+            Intent intent = new Intent(getApplicationContext(), PieActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_share) {
 
@@ -229,18 +244,55 @@ public class HomeActivity extends AppCompatActivity
             random = new Random();
             for(int j = 0; j< dates.size();j++){
                 max = 100f;
-                value = random.nextFloat()*max;
+                value = random.nextFloat();
+                Log.d(TAG, Float.toString(value));
+                value = value * max;
+                Log.d(TAG, "After " + Float.toString(value));
                 barEntries.add(new BarEntry(value,j));
             }
 
         }catch(ParseException e){
             e.printStackTrace();
         }
+//        DBHelper dbHelper = new DBHelper(this);
+//
+//        Cursor res = dbHelper.getAllData();
+//        if(res.getCount()==0){
+//            Log.d("DATABASE:","EMPTY!!!!!!!!!!!!!!!!!");
+//            return;
+//        }
+//        int i = 0;
+//        barEntries = new ArrayList<>();
+//        dates = new ArrayList<>();
+//        while (res.moveToNext()) {
+//            StringBuffer entry = new StringBuffer();
+//            entry.append("Id : " + res.getString(0) + "\n");
+//            entry.append("Bank : " + res.getString(1) + "\n");
+//            entry.append("Location : " + res.getString(2) + "\n");
+//            entry.append("Date : " + res.getString(3) + "\n");
+//            entry.append("Cost : " + res.getString(4) + "\n");
+//            entry.append("Category : " + res.getString(5) + "\n");
+//            entry.append("Type : " + res.getString(6));
+//            Log.d("Debugging", res.getString(3) + " chec " + res.getString(4));
+//            if(res.getString(4).length() != 0 && res.getString(3).length() != 0 ) {
+//                barEntries.add(new BarEntry(Float.parseFloat(res.getString(4).replace("$","").replace(",","")), i));
+//                dates.add(res.getString(3));
+//            }
+//            i++;
+//
+//
+//        }
+//
+//
+//        Collections.reverse(dates);
+//        Collections.reverse(barEntries);
+//        for(int a = 0; a < dates.size();a++) {
+//            Log.d("reverse" , dates.get(a));
+//        }
 
         BarDataSet barDataSet = new BarDataSet(barEntries,"Dates");
-        BarData barData = new BarData(dates,barDataSet);
+        BarData barData = new BarData(dates, barDataSet);
         barChart.setData(barData);
-        barChart.setDescription("My First Bar Graph!");
 
     }
 
@@ -264,5 +316,6 @@ public class HomeActivity extends AppCompatActivity
         }
         return curDate;
     }
-
 }
+
+

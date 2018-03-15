@@ -1,5 +1,6 @@
 package com.example.theon.expensetracker;
 
+import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.theon.expensetracker.Database.DBHelper;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
@@ -194,7 +196,13 @@ public class ManualAdd extends AppCompatActivity {
 
             // take care of db insertion here.
             // after insertion close the activity
-
+            String storeName = item.getText().toString();
+            String cost = itemCost.getText().toString();
+            String date = monthSpinner.getSelectedItem().toString() +"/" +dateSpinner.getSelectedItem().toString() +"/" + yearSpinner.getSelectedItem().toString();
+            String category = categorySpinner.getSelectedItem().toString();
+            DBHelper dbhelper = new DBHelper(this);
+            Log.d("TAG", storeName + " " + date + " " + cost + " " + category);
+            dbhelper.insertData("Discover", storeName, date, cost,category,"credit");
             finish();
         }
     }
@@ -299,6 +307,11 @@ public class ManualAdd extends AppCompatActivity {
     private void callCloudVision(final Bitmap bitmap) throws IOException {
         // Switch text to loading
         //mImageDetails.setText(R.string.loading_message);
+        final ProgressDialog progressDialog = new ProgressDialog(ManualAdd.this,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Processing...");
+        progressDialog.show();
 
         // Do the real work in an async task, because we need to use the network anyway
         new AsyncTask<Object, Void, String>() {
@@ -398,6 +411,7 @@ public class ManualAdd extends AppCompatActivity {
             }
 
             protected void onPostExecute(String result) {
+                progressDialog.dismiss();
                 item.setText(storeName);
                 String dateParts[] = date.split("/");
                 itemCost.setText(cost);
