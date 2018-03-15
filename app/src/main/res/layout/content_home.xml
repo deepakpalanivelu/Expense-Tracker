@@ -8,6 +8,14 @@
     tools:context="com.example.theon.expensetracker.HomeActivity"
     tools:showIn="@layout/app_bar_home">
 
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/bargraph"
+        android:layout_width="match_parent"
+        android:layout_height="400dp">
+
+
+    </com.github.mikephil.charting.charts.BarChart>
+
     <ImageButton
         android:id="@+id/parsesms"
         android:layout_width="wrap_content"
