@@ -2,8 +2,12 @@ package com.example.theon.expensetracker;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 
 import android.widget.Button;
@@ -11,25 +15,39 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
 
 public class LoginActivity extends Activity  {
     Button loginBtn;
     TextView signupLink;
     EditText userName, password;
+    private FirebaseAuth firebaseAuth;
+// ...
 
     TextView tagLine;
     private static final int REQUEST_SIGNUP = 0;
     private static final int REQUEST_HOME = 1;
+    private String TAG = "LoginActivity.class";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        FirebaseApp.initializeApp(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        firebaseAuth = FirebaseAuth.getInstance();
         tagLine = (TextView)findViewById(R.id.tagLine);
         userName = (EditText)findViewById(R.id.email_id);
         password = (EditText)findViewById(R.id.pwd);
         loginBtn = (Button)findViewById(R.id.login);
         signupLink = (TextView)findViewById(R.id.signup);
+
+
 
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
@@ -51,13 +69,23 @@ public class LoginActivity extends Activity  {
         });
     }
 
-    private void login() {
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+       // FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        //onLoginSuccess();
+    }
 
+
+
+    private void login() {
+        String email = userName.getText().toString();
+        String pass = password.getText().toString();
         if (!validate()) {
             onLoginFailed();
             return;
         }
-
         loginBtn.setEnabled(false);
 
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
@@ -65,21 +93,40 @@ public class LoginActivity extends Activity  {
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
+        firebaseAuth.signInWithEmailAndPassword(email,pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()) {
+                    Log.d(TAG, "SignInSuccess");
+                 //   FirebaseUser user =  mAuth.getCurrentUser();
+                    onLoginSuccess();
+                }
 
-        String email = userName.getText().toString();
-        String pass = password.getText().toString();
+                else
+                {
+                    onLoginFailed();
+                }
+
+                progressDialog.dismiss();
+            }
+        });
+
+
+
+
+
 
         // Have to authenticate with the db
 
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
+//        new android.os.Handler().postDelayed(
+//                new Runnable() {
+//                    public void run() {
+//                        // On complete call either onLoginSuccess or onLoginFailed
+//                        onLoginSuccess();
+//                        // onLoginFailed();
+//                        progressDialog.dismiss();
+//                    }
+//                }, 3000);
     }
 
     public boolean validate() {
@@ -106,7 +153,11 @@ public class LoginActivity extends Activity  {
     }
 
     public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        Toast toast = Toast.makeText(getApplicationContext(), "Incorrect credentials, try again", Toast.LENGTH_SHORT);
+        View view = toast.getView();
+        view.setPadding(20, 20, 20, 20);
+        view.setBackgroundColor(getResources().getColor(R.color.login));
+        toast.show();
 
         loginBtn.setEnabled(true);
     }
