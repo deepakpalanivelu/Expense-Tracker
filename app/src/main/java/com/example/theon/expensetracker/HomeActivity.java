@@ -4,6 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,8 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageButton;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -29,7 +35,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
-public class HomeActivity extends AppCompatActivity
+public class HomeActivity extends FragmentActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ImageButton addTrigger;
@@ -37,13 +43,21 @@ public class HomeActivity extends AppCompatActivity
     ArrayList<String> dates;
     Random random;
     ArrayList<BarEntry> barEntries;
+    private static String TAG = "HomeActivity.class";
+    private static final int NUM_PAGES = 2;
+    private ViewPager mPager;
+    private PagerAdapter mPagerAdapter;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        setSupportActionBar(toolbar);
+
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -146,7 +160,10 @@ public class HomeActivity extends AppCompatActivity
             random = new Random();
             for(int j = 0; j< dates.size();j++){
                 max = 100f;
-                value = random.nextFloat()*max;
+                value = random.nextFloat();
+                Log.d(TAG, Float.toString(value));
+                value = value * max;
+                Log.d(TAG, "After " + Float.toString(value));
                 barEntries.add(new BarEntry(value,j));
             }
 
@@ -182,4 +199,8 @@ public class HomeActivity extends AppCompatActivity
         return curDate;
     }
 
+
+
 }
+
+

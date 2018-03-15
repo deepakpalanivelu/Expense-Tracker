@@ -1,5 +1,6 @@
 package com.example.theon.expensetracker;
 
+import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -298,6 +299,11 @@ public class ManualAdd extends AppCompatActivity {
     private void callCloudVision(final Bitmap bitmap) throws IOException {
         // Switch text to loading
         //mImageDetails.setText(R.string.loading_message);
+        final ProgressDialog progressDialog = new ProgressDialog(ManualAdd.this,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Processing...");
+        progressDialog.show();
 
         // Do the real work in an async task, because we need to use the network anyway
         new AsyncTask<Object, Void, String>() {
@@ -397,6 +403,7 @@ public class ManualAdd extends AppCompatActivity {
             }
 
             protected void onPostExecute(String result) {
+                progressDialog.dismiss();
                 item.setText(storeName);
                 String dateParts[] = date.split("/");
                 itemCost.setText(cost);
