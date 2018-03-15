@@ -1,5 +1,6 @@
 package com.example.theon.expensetracker;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -8,6 +9,7 @@ import android.graphics.Color;
 
 import android.util.Log;
 
+import com.example.theon.expensetracker.Database.DBHelper;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
@@ -32,15 +34,29 @@ public class PieActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: starting to create chart");
 
         pieChart = (PieChart) findViewById(R.id.idPieChart);
+//        DBHelper db = new DBHelper(this);
+//        Cursor cur = db.getExpenseByCategory();
+//        if(cur.getCount()==0){
+//            Log.d("DATABASE:","EMPTY!!!!!!!!!!!!!!!!!");
+//            return;
+//        }
+//        List<Entry> entries = new ArrayList<Entry>();
+//        while (cur.moveToNext()) {
+//            StringBuffer entry = new StringBuffer();
+//            entry.append("Bank : " + res.getString(1) + "\n");
+//            entries.add(new Entry(4f, 0));
+//            entries.add(new Entry(8f, 1));
+//            entries.add(new Entry(6f, 2));
+//            entries.add(new Entry(12f, 3));
+//
+//
+//
+//        }
+
+
 
 
         List<Entry> entries = new ArrayList<Entry>();
-        entries.add(new Entry(4f, 0));
-        entries.add(new Entry(8f, 1));
-        entries.add(new Entry(6f, 2));
-        entries.add(new Entry(12f, 3));
-
-
         pieChart.setDescription("Expense by category");
         pieChart.setRotationEnabled(true);
         ArrayList<Integer> colours = new ArrayList<>();

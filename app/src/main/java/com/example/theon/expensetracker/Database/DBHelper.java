@@ -99,4 +99,11 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor res = db.rawQuery("SELECT * FROM " +TABLE_NAME +" ORDER BY " + COL_4 , null);
         return res;
     }
+
+    public Cursor getExpenseByCategory() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("SELECT SUM(" +COL_5 +"), " + COL_6 + " from " +  TABLE_NAME + " GROUP BY " + COL_6, null);
+
+        return res;
+    }
 }

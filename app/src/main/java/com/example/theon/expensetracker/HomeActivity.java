@@ -22,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -32,11 +33,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import com.example.theon.expensetracker.Database.DBHelper;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ImageButton smsTrigger,addTrigger;
+    private Button pieChart;
     private static final int REQUEST_READ_SMS = 2;
     BarChart barChart;
     ArrayList<String> dates;
@@ -57,7 +60,6 @@ public class HomeActivity extends AppCompatActivity
     private static final int NUM_PAGES = 2;
     private ViewPager mPager;
     private PagerAdapter mPagerAdapter;
-    Fragment fragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +83,7 @@ public class HomeActivity extends AppCompatActivity
         addTrigger = findViewById(R.id.add);
         barChart = (BarChart) findViewById(R.id.bargraph);
 
-        createRandomBarGraph("2016/05/05", "2016/06/01");
+        createRandomBarGraph("09/05/2017", "15/03/2018");
 
         populateexpenses();
 
@@ -102,6 +104,17 @@ public class HomeActivity extends AppCompatActivity
                 startActivityForResult(intent,0);
             }
         });
+
+        pieChart = findViewById(R.id.pie);
+        pieChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), PieActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
     }
 
     @Override
@@ -147,13 +160,9 @@ public class HomeActivity extends AppCompatActivity
         if (id == R.id.account) {
             // Handle the camera action
         } else if (id == R.id.balance) {
-
-        } else if (id == R.id.settings) {
-            Intent intent = new Intent(getApplicationContext(), PieActivity.class);
-            startActivity(intent);
-
-        } else if (id == R.id.nav_share) {
-
+            // handle logout here
+            FirebaseAuth.getInstance().signOut();
+            finish();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -234,7 +243,7 @@ public class HomeActivity extends AppCompatActivity
             float value = 0f;
             random = new Random();
             for(int j = 0; j< dates.size();j++){
-                max = 100f;
+                max = 10f;
                 value = random.nextFloat();
                 Log.d(TAG, Float.toString(value));
                 value = value * max;
