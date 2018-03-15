@@ -18,7 +18,8 @@ import android.widget.ImageButton;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private ImageButton addTrigger;
+    private ImageButton addTrigger,smsTrigger;
+    private static final int REQUEST_READ_SMS = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,16 @@ public class HomeActivity extends AppCompatActivity
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ManualAdd.class);
                 startActivity(intent);
+            }
+        });
+
+
+        smsTrigger = findViewById(R.id.parsesms);
+        smsTrigger.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), parseSMS.class);
+                startActivityForResult(intent,REQUEST_READ_SMS);
             }
         });
     }
