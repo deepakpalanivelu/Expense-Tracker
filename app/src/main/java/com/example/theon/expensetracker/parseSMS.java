@@ -58,10 +58,11 @@ public class parseSMS extends AppCompatActivity {
             ActivityCompat.requestPermissions(parseSMS.this, new String[]{android.Manifest.permission.READ_SMS}, RequestPermissionCode);
         }
 
-        dbHelper = new DBHelper(this);
-        dbHelper.deleteAll();
-        refreshSmsInbox();
-
+        //if (ActivityCompat.shouldShowRequestPermissionRationale(parseSMS.this, android.Manifest.permission.READ_SMS)) {
+            dbHelper = new DBHelper(this);
+            dbHelper.deleteAll();
+            refreshSmsInbox();
+        //}
         Cursor res = dbHelper.getAllData();
         if(res.getCount()==0){
             Log.d("DATABASE:","EMPTY!!!!!!!!!!!!!!!!!");
@@ -69,7 +70,6 @@ public class parseSMS extends AppCompatActivity {
         }
         while (res.moveToNext()) {
             StringBuffer entry = new StringBuffer();
-            entry.append("Id : " + res.getString(0) + "\n");
             entry.append("Bank : " + res.getString(1) + "\n");
             entry.append("Location : " + res.getString(2) + "\n");
             entry.append("Date : " + res.getString(3) + "\n");
@@ -87,8 +87,9 @@ public class parseSMS extends AppCompatActivity {
                 @Override
                 public void run() {
                     //start your activity here
-                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                    startActivity(intent);
+                    //Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                    //startActivity(intent);
+                    finish();
                 }
 
             }, 3000L);
@@ -129,13 +130,14 @@ public class parseSMS extends AppCompatActivity {
                     }
                     if(i+2 < al.size()) {
                         location+=" "+sms_each[i+2];
-                        if (al.get(i+2) == "STORE") {
+                        Log.d("CATEgOry",""+sms_each[i+2]);
+                        if (sms_each[i+2].contains("STORE")) {
                             category = "Shopping";
-                        } else if(al.get(i+2) == "RESTAURANT") {
+                        } else if(sms_each[i+2].contains("RESTAURANT")) {
                             category = "Dining";
-                        } else if(al.get(i+2) == "GAS") {
+                        } else if(sms_each[i+2].contains("GAS")) {
                             category = "Gas";
-                        } else if(al.get(i+2) == "CINEMAS") {
+                        } else if(sms_each[i+2] == "CINEMAS") {
                             category = "Entertainment";
                         } else {
                             category = "Others";
@@ -166,10 +168,11 @@ public class parseSMS extends AppCompatActivity {
                     type1 = "credit";
                 }
 
-
-                boolean isSuccessfullyInserted = dbHelper.insertData(bank, location, date1, cost, category, type1);
-                if (isSuccessfullyInserted) {
-                    Log.d("Hi",isSuccessfullyInserted + "");
+                if(location != "" && date1 != "") {
+                    boolean isSuccessfullyInserted = dbHelper.insertData(bank, location, date1, cost, category, type1);
+                    if (isSuccessfullyInserted) {
+                        Log.d("Hi",isSuccessfullyInserted + "");
+                    }
                 }
 
             }
