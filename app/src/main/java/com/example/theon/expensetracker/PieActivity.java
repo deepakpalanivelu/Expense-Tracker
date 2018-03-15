@@ -1,5 +1,6 @@
 package com.example.theon.expensetracker;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -8,6 +9,7 @@ import android.graphics.Color;
 
 import android.util.Log;
 
+import com.example.theon.expensetracker.Database.DBHelper;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
@@ -32,39 +34,37 @@ public class PieActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: starting to create chart");
 
         pieChart = (PieChart) findViewById(R.id.idPieChart);
-
+        DBHelper db = new DBHelper(this);
+        Cursor cur = db.getExpenseByCategory();
 
         List<Entry> entries = new ArrayList<Entry>();
         entries.add(new Entry(4f, 0));
-        entries.add(new Entry(8f, 1));
-        entries.add(new Entry(6f, 2));
-        entries.add(new Entry(12f, 3));
+        entries.add(new Entry(1f, 1));
+        entries.add(new Entry(3f, 2));
+        entries.add(new Entry(2f, 3));
 
 
         pieChart.setDescription("Expense by category");
         pieChart.setRotationEnabled(true);
         ArrayList<Integer> colours = new ArrayList<>();
-        colours.add(Color.GRAY);
-        colours.add(Color.BLUE);
-        colours.add(Color.RED);
-        colours.add(Color.GREEN);
+        colours.add(Color.parseColor("#2B4A6F"));
+        colours.add(Color.parseColor("#26715B"));
+
+        colours.add(Color.parseColor("#A23645"));
+        colours.add(Color.parseColor("#93A63A"));
 
         pieChart.setUsePercentValues(true);
-        pieChart.setHoleColor(Color.BLUE);
-        pieChart.setCenterTextColor(Color.BLACK);
+        pieChart.setHoleColor(Color.BLACK);
+        pieChart.setCenterTextColor(Color.WHITE);
         pieChart.setHoleRadius(25f);
         pieChart.setTransparentCircleAlpha(0);
-        pieChart.setCenterText("Super Cool Chart");
+        pieChart.setCenterText("Category");
         pieChart.setCenterTextSize(10);
 
         PieDataSet dataset = new PieDataSet(entries,"category");
 
         dataset.setSliceSpace(2);
         dataset.setValueTextSize(12);
-
-        //add colors to dataset
-
-
         dataset.setColors(colours);
 
 

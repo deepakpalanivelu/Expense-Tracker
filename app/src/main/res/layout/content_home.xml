@@ -14,7 +14,7 @@
 
         <ImageButton
             android:id="@+id/add"
-            android:layout_width="150dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
@@ -27,7 +27,7 @@
 
         <ImageButton
             android:id="@+id/parsesms"
-            android:layout_width="159dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
@@ -52,6 +52,14 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/bargraph" />
+
+        <Button
+            android:id="@+id/pie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/expenseslist"
+            android:layout_centerHorizontal="true"
+            android:text="chart" />
 
     </RelativeLayout>
 

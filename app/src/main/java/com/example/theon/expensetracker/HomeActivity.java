@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -22,18 +23,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.example.theon.expensetracker.Database.DBHelper;
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,11 +35,13 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Random;
 import com.example.theon.expensetracker.Database.DBHelper;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ImageButton smsTrigger,addTrigger;
+    private Button pieChart;
     private static final int REQUEST_READ_SMS = 2;
     BarChart barChart;
     ArrayList<String> dates;
@@ -67,7 +62,6 @@ public class HomeActivity extends AppCompatActivity
     private static final int NUM_PAGES = 2;
     private ViewPager mPager;
     private PagerAdapter mPagerAdapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +85,7 @@ public class HomeActivity extends AppCompatActivity
         addTrigger = findViewById(R.id.add);
         barChart = (BarChart) findViewById(R.id.bargraph);
 
+        createRandomBarGraph("09/05/2017", "15/03/2018");
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_SMS)) {
             Toast.makeText(this, "Permission needed to access your sms", Toast.LENGTH_LONG).show();
@@ -117,6 +112,17 @@ public class HomeActivity extends AppCompatActivity
                 startActivityForResult(intent,0);
             }
         });
+
+        pieChart = findViewById(R.id.pie);
+        pieChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), PieActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
     }
 
     @Override
@@ -162,13 +168,9 @@ public class HomeActivity extends AppCompatActivity
         if (id == R.id.account) {
             // Handle the camera action
         } else if (id == R.id.balance) {
-
-        } else if (id == R.id.settings) {
-            Intent intent = new Intent(getApplicationContext(), PieActivity.class);
-            startActivity(intent);
-
-        } else if (id == R.id.nav_share) {
-
+            // handle logout here
+            FirebaseAuth.getInstance().signOut();
+            finish();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -249,7 +251,7 @@ public class HomeActivity extends AppCompatActivity
             float value = 0f;
             random = new Random();
             for(int j = 0; j< dates.size();j++){
-                max = 100f;
+                max = 10f;
                 value = random.nextFloat();
                 Log.d(TAG, Float.toString(value));
                 value = value * max;
@@ -290,8 +292,8 @@ public class HomeActivity extends AppCompatActivity
         }
 
 
-        Collections.reverse(dates);
-        Collections.reverse(barEntries);
+        //Collections.reverse(dates);
+        //Collections.reverse(barEntries);
         for(int a = 0; a < dates.size();a++) {
             Log.d("reverse" , dates.get(a));
         }
