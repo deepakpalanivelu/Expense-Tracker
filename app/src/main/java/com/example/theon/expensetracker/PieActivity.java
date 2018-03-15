@@ -61,10 +61,6 @@ public class PieActivity extends AppCompatActivity {
 
         dataset.setSliceSpace(2);
         dataset.setValueTextSize(12);
-
-        //add colors to dataset
-
-
         dataset.setColors(colours);
 
 
