@@ -194,6 +194,7 @@ public class ManualAdd extends AppCompatActivity {
 
             // take care of db insertion here.
             // after insertion close the activity
+
             finish();
         }
     }

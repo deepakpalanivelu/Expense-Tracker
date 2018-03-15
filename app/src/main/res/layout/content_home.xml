@@ -8,41 +8,51 @@
     tools:context="com.example.theon.expensetracker.HomeActivity"
     tools:showIn="@layout/app_bar_home">
 
-    <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/bargraph"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="400dp">
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/add"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_add_black_24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/parsesms"
+            android:layout_width="159dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/ic_refresh_black_24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/bargraph"
+            android:layout_width="match_parent"
+            android:layout_height="213dp">
 
 
-    </com.github.mikephil.charting.charts.BarChart>
+        </com.github.mikephil.charting.charts.BarChart>
 
-    <ImageButton
-        android:id="@+id/parsesms"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="54dp"
-        android:layout_marginEnd="26dp"
-        android:layout_marginStart="310dp"
-        android:layout_marginTop="413dp"
-        android:src="@drawable/ic_refresh_black_24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        <ListView
+            android:id="@+id/expenseslist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/add"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/bargraph" />
 
-    <ImageButton
-        android:id="@+id/add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="54dp"
-        android:layout_marginEnd="26dp"
-        android:layout_marginStart="310dp"
-        android:layout_marginTop="413dp"
-        android:src="@drawable/ic_add_black_24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    </RelativeLayout>
+
 </android.support.constraint.ConstraintLayout>

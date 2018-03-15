@@ -1,9 +1,11 @@
 package com.example.theon.expensetracker;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,10 +15,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ListView;
+import android.widget.Toast;
 
+import com.example.theon.expensetracker.Database.DBHelper;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -28,22 +34,35 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
+import com.example.theon.expensetracker.Database.DBHelper;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private ImageButton smsTrigger;
+    private ImageButton smsTrigger,addTrigger;
     private static final int REQUEST_READ_SMS = 2;
-    private ImageButton addTrigger;
     BarChart barChart;
     ArrayList<String> dates;
     Random random;
     ArrayList<BarEntry> barEntries;
+    DBHelper dbHelper;
+    ListView smsListView;
+    ArrayAdapter arrayAdapter;
+    ArrayList<String> smsMessagesList;
+
+    Integer[] imgid={
+            R.drawable.ic_shopping_cart_black_84dp,
+            R.drawable.ic_local_dining_black_84dp,
+            R.drawable.ic_movie_filter_black_84dp,
+            R.drawable.ic_local_gas_station_black_84dp
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        smsListView = (ListView) findViewById(R.id.expenseslist);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -60,6 +79,7 @@ public class HomeActivity extends AppCompatActivity
 
         createRandomBarGraph("2016/05/05", "2016/06/01");
 
+        populateexpenses();
 
         addTrigger.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,8 +94,8 @@ public class HomeActivity extends AppCompatActivity
         smsTrigger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), parseSMS.class);
-                startActivityForResult(intent,REQUEST_READ_SMS);
+                Intent intent = new Intent(HomeActivity.this,parseSMS.class);
+                startActivityForResult(intent,0);
             }
         });
     }
@@ -90,6 +110,7 @@ public class HomeActivity extends AppCompatActivity
             finish();
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -131,6 +152,56 @@ public class HomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        populateexpenses();
+        Toast.makeText(this, "Refreshed", Toast.LENGTH_LONG).show();
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if(intent.getStringExtra("methodName").equals("myMethod")){
+            Toast.makeText(this, "Refreshed", Toast.LENGTH_LONG).show();
+            populateexpenses();
+
+        }
+    }
+
+    public void populateexpenses(){
+        dbHelper = new DBHelper(this);
+
+        smsMessagesList = new ArrayList<String>();
+        smsMessagesList.clear();
+
+        Cursor res = dbHelper.getAllData();
+        if(res.getCount()==0){
+            Log.d("DATABASE:","EMPTY!!!!!!!!!!!!!!!!!");
+            return;
+        }
+        while (res.moveToNext()) {
+            StringBuffer entry = new StringBuffer();
+            entry.append("Bank : " + res.getString(1) + "\n");
+            entry.append("Location : " + res.getString(2) + "\n");
+            entry.append("Date : " + res.getString(3) + "\n");
+            entry.append("Cost : " + res.getString(4) + "\n");
+            entry.append("Category : " + res.getString(5) + "\n");
+            entry.append("Type : " + res.getString(6));
+
+            smsMessagesList.add(entry.toString());
+        }
+        CustomListAdapter adapter=new CustomListAdapter(this, smsMessagesList, imgid);
+        //smsListView=(ListView)findViewById(R.id.list);
+        smsListView.setAdapter(adapter);
+        /*arrayAdapter = new ArrayAdapter<String>(
+                this, R.layout.listlayputexpenses,
+                R.id.Itemname,smsMessagesList);
+        smsListView.setAdapter(arrayAdapter);*/
     }
 
     public void createRandomBarGraph(String Date1, String Date2){
