@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class LoginActivity extends Activity  {
@@ -72,9 +73,11 @@ public class LoginActivity extends Activity  {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-       // FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        //onLoginSuccess();
+         //Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        if(currentUser != null) {
+            //onLoginSuccess();
+        }
     }
 
 
@@ -98,7 +101,7 @@ public class LoginActivity extends Activity  {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
                     Log.d(TAG, "SignInSuccess");
-                 //   FirebaseUser user =  mAuth.getCurrentUser();
+                    FirebaseUser user =  firebaseAuth.getCurrentUser();
                     onLoginSuccess();
                 }
 

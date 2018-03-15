@@ -93,4 +93,10 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABLE_NAME, "ID = ?", new String[]{id});
     }
+
+    public Cursor sortByDate() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("SELECT * FROM " +TABLE_NAME +" ORDER BY " + COL_4 , null);
+        return res;
+    }
 }

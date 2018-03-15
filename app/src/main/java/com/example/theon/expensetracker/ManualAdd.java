@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.theon.expensetracker.Database.DBHelper;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
@@ -195,6 +196,13 @@ public class ManualAdd extends AppCompatActivity {
 
             // take care of db insertion here.
             // after insertion close the activity
+            String storeName = item.getText().toString();
+            String cost = itemCost.getText().toString();
+            String date = monthSpinner.getSelectedItem().toString() +"/" +dateSpinner.getSelectedItem().toString() +"/" + yearSpinner.getSelectedItem().toString();
+            String category = categorySpinner.getSelectedItem().toString();
+            DBHelper dbhelper = new DBHelper(this);
+            Log.d("TAG", storeName + " " + date + " " + cost + " " + category);
+            dbhelper.insertData("Discover", storeName, date, cost,category,"credit");
             finish();
         }
     }
