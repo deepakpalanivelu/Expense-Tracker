@@ -7,9 +7,9 @@ import com.github.mikephil.charting.data.BarEntry;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -27,31 +27,38 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Random;
-import com.example.theon.expensetracker.Database.DBHelper;
+
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener  {
 
     private ImageButton smsTrigger,addTrigger;
     private Button pieChart;
     private static final int REQUEST_READ_SMS = 2;
     BarChart barChart;
     ArrayList<String> dates;
+    ArrayList<String> months;
     Random random;
     ArrayList<BarEntry> barEntries;
     DBHelper dbHelper;
     ListView smsListView;
     ArrayAdapter arrayAdapter;
     ArrayList<String> smsMessagesList;
+    Spinner select_date_month;
 ArrayList<String> ids;
 
     Integer[] imgid={
@@ -73,6 +80,42 @@ ArrayList<String> ids;
         smsListView = (ListView) findViewById(R.id.expenseslist);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        select_date_month=(Spinner)findViewById(R.id.select_date_month);
+        barChart = (BarChart) findViewById(R.id.bargraph);
+
+
+        ArrayAdapter<CharSequence> charSequenceArrayAdapter=ArrayAdapter.createFromResource(this,R.array.spinner_bargraph,android.R.layout.simple_spinner_item);
+        charSequenceArrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        select_date_month.setAdapter(charSequenceArrayAdapter);
+
+        select_date_month.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position)
+                {
+                    case 1:
+                        Toast.makeText(HomeActivity.this,"selected bar graph by MONTH",Toast.LENGTH_SHORT).show();
+//                        GET the month's data of currencies+ see how to to it faster..
+                        createRandomBarGraph_month();
+
+                    case 0:
+                        Toast.makeText(HomeActivity.this,"selected bar graph by day",Toast.LENGTH_SHORT).show();
+//-------------**** do toggling tomorrow ask team mates and do it faster..
+
+                        createRandomBarGraph("09/05/2017", "15/03/2018");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                createRandomBarGraph("09/05/2017", "15/03/2018");
+            }
+        });
+
+
+
+
+
 
 
 
@@ -85,9 +128,9 @@ ArrayList<String> ids;
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         addTrigger = findViewById(R.id.add);
-        barChart = (BarChart) findViewById(R.id.bargraph);
 
-        createRandomBarGraph("09/05/2017", "15/03/2018");
+
+
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_SMS)) {
             Toast.makeText(this, "Permission needed to access your sms", Toast.LENGTH_LONG).show();
@@ -237,11 +280,11 @@ ArrayList<String> ids;
             StringBuffer entry = new StringBuffer();
             ids.add(res.getString(0));
 
-            entry.append("" + res.getString(2) + "\n");
+            entry.append(res.getString(2) + "\n");
             entry.append(res.getString(4) + "\n");
-            entry.append("" + res.getString(1) + " - "+res.getString(3)+"\n");
-            entry.append("" + res.getString(5) + "\n");
-            entry.append(""+res.getString(6));
+            entry.append(res.getString(1) + " - "+res.getString(3)+"\n");
+            entry.append( res.getString(5) + "\n");
+            entry.append(res.getString(6));
 
             smsMessagesList.add(entry.toString());
         }
@@ -253,6 +296,123 @@ ArrayList<String> ids;
                 R.id.Itemname,smsMessagesList);
         smsListView.setAdapter(arrayAdapter);*/
     }
+
+    public void createRandomBarGraph_month() {
+        ArrayList<BarEntry> barEntries_month=new ArrayList<BarEntry>();
+        DBHelper dbHelper = new DBHelper(this);
+        Cursor res = dbHelper.getAllData();
+        if (res.getCount() == 0) {
+            Log.d("DATABASE:", "EMPTY!!!!!!!!!!!!!!!!!");
+            return;
+        }
+
+
+        int i = 0;
+        barEntries = new ArrayList<>();
+        months = new ArrayList<>();
+//        only to get all ids of messages
+
+        while (res.moveToNext()) {
+            StringBuffer entry = new StringBuffer();
+            entry.append("Bank : " + res.getString(1) + "\n");
+            entry.append("Location : " + res.getString(2) + "\n");
+            entry.append("Date : " + res.getString(3) + "\n");
+            entry.append("Cost : " + res.getString(4) + "\n");
+            entry.append("Category : " + res.getString(5) + "\n");
+            entry.append("Type : " + res.getString(6));
+            Log.d("Debugging", res.getString(3) + " chec " + res.getString(4));
+
+
+            if (res.getString(4).length() != 0 && res.getString(3).length() != 0) {
+
+//                barEntries.add(new BarEntry(Float.parseFloat(res.getString(4).replace("$", "")), i));
+                dates.add(res.getString(3).replace(",", " "));
+            }
+            i++;
+        }
+        for (int j = 0; j < dates.size(); j++) {
+            String[] date_split = dates.get(j).split("\\s");
+
+//          split 0...month
+
+            if (date_split[0].equals("January")) {
+                months.add(date_split[0]);
+            } else if (date_split[0].equals("October")) {
+                months.add(date_split[0]);
+            } else if (date_split[0].equals("February")) {
+                months.add(date_split[0]);
+            } else if (date_split[0].equals("March")) {
+                months.add(date_split[0]);
+            } else if (date_split[0].equals("April")) {
+                months.add(date_split[0]);
+            } else if (date_split[0].equals("May")) {
+                months.add(date_split[0]);
+            } else if (date_split[0].equals("June")) {
+                months.add(date_split[0]);
+            } else if (date_split[0].equals("July")) {
+                months.add(date_split[0]);
+            } else if (date_split[0].equals("August")) {
+                months.add(date_split[0]);
+            } else if (date_split[0].equals("September")) {
+                months.add(date_split[0]);
+            } else if (date_split[0].equals("November")) {
+                months.add(date_split[0]);
+            } else {
+
+                months.add("December");
+            }
+
+
+
+        }
+
+//get unique months
+        HashSet hs=new HashSet();
+        hs.addAll(months);
+        months.clear();
+        months.addAll(hs);
+
+        for(int j=0;j<months.size();j++) {
+
+            Cursor sum_month = dbHelper.getMonthExpenses(months.get(j));
+
+            while (sum_month.moveToNext()) {
+
+                if (sum_month.getString(0).length() != 0) {
+                    Log.d("query answer is", sum_month.getString(0));
+//                answer returning 0 for all
+                    barEntries_month.add(new BarEntry(Float.parseFloat(sum_month.getString(0).replace("$", "")), 0));
+                }
+            }
+        }
+
+
+//split 2 by year. not done
+
+
+        //Collections.reverse(dates);
+        //Collections.reverse(barEntries);
+
+
+
+        barChart.invalidate();
+
+//        bar graph per date expenses view
+        BarDataSet barDataSet = new BarDataSet(barEntries_month,"currency");
+        BarData barData = new BarData(months, barDataSet);
+        barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        barChart.setData(barData);
+        barChart.setDescription("Expenses Graph");
+        barChart.setDescriptionTypeface(Typeface.defaultFromStyle(Typeface.BOLD_ITALIC));
+        barChart.setDescriptionTextSize(9f);
+        /* clear the existing chart and redraw new values , ERROR IN THIS CHART IS NOT UPDATING. see this command... but x,y values are correct. */
+        barChart.notifyDataSetChanged();
+
+
+        }
+
+
+
 
     public void createRandomBarGraph(String Date1, String Date2){
 
@@ -296,7 +456,7 @@ ArrayList<String> ids;
             Log.d("DATABASE:","EMPTY!!!!!!!!!!!!!!!!!");
             return;
         }
-        int i = 0;
+    int i=0;
         barEntries = new ArrayList<>();
         dates = new ArrayList<>();
 //        only to get all ids of messages
@@ -309,10 +469,13 @@ ArrayList<String> ids;
             entry.append("Cost : " + res.getString(4) + "\n");
             entry.append("Category : " + res.getString(5) + "\n");
             entry.append("Type : " + res.getString(6));
-            Log.d("Debugging", res.getString(3) + " chec " + res.getString(4));
-            if(res.getString(4).length() != 0 && res.getString(3).length() != 0 ) {
-                barEntries.add(new BarEntry(Float.parseFloat(res.getString(4).replace("$","").replace(",","")), i));
-                dates.add(res.getString(3));
+
+
+
+            if(res.getString(4).length() != 0 && res.getString(3).length() != 0 )
+            {
+                barEntries.add(new BarEntry(Float.parseFloat(res.getString(4).replace("$","")),i));
+                dates.add(res.getString(3).replace(",",""));
             }
             i++;
 
@@ -327,20 +490,46 @@ ArrayList<String> ids;
         }
 
         //barChart.clear();
-        BarDataSet barDataSet = new BarDataSet(barEntries,"Dates");
+//        bar graph per date expenses view
+        BarDataSet barDataSet = new BarDataSet(barEntries,"currency");
         BarData barData = new BarData(dates, barDataSet);
+        barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         barChart.setData(barData);
+        barChart.setDescription("Expenses Graph");
+        barChart.setDescriptionTypeface(Typeface.defaultFromStyle(Typeface.BOLD_ITALIC));
+        barChart.setDescriptionTextSize(9f);
 
+//        oncliick of an bar entry
+        barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+                System.out.println("value_Y_axis"+e.getVal()+"x_index"+e.getXIndex());
+                Float f1=e.getVal();
+
+//create new intent and show data there
+        Intent intent=new Intent(HomeActivity.this,bar_chart_day.class);
+            intent.putExtra("yaxis_value",f1.toString());
+            startActivity(intent);
+            }
+
+            @Override
+            public void onNothingSelected() {
+//do nothing
+            }
+    });
     }
 
-    public ArrayList<String> getList(Calendar startDate, Calendar endDate){
-        ArrayList<String> list = new ArrayList<String>();
-        while(startDate.compareTo(endDate)<=0){
-            list.add(getDate(startDate));
-            startDate.add(Calendar.DAY_OF_MONTH,1);
-        }
-        return list;
-    }
+
+
+
+//    public ArrayList<String> getList(Calendar startDate, Calendar endDate){
+//        ArrayList<String> list = new ArrayList<String>();
+//        while(startDate.compareTo(endDate)<=0){
+//            list.add(getDate(startDate));
+//            startDate.add(Calendar.DAY_OF_MONTH,1);
+//        }
+//        return list;
+//    }
 
     public String getDate(Calendar cld){
         String curDate = cld.get(Calendar.YEAR) + "/" + (cld.get(Calendar.MONTH) + 1) + "/"

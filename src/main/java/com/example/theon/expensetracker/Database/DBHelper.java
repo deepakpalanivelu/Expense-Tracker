@@ -7,9 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-/**
- * Created by subra on 3/15/2018.
- */
+
 
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -111,8 +109,22 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Cursor getExpenseByCategory() {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("SELECT " +COL_6+ ",SUM("+COL_5+") from " +TABLE_NAME+ " GROUP BY " +COL_6, null);
+        Cursor res = db.rawQuery("SELECT " +COL_6+ ",SUM("+COL_5+") FROM " +TABLE_NAME+ " GROUP BY " +COL_6, null);
 
         return res;
     }
+
+//get sum of currencies for one month
+    public Cursor getMonthExpenses(String month){
+//        returns sum as 0, as others
+        SQLiteDatabase db = this.getWritableDatabase();
+     return db.rawQuery("SELECT SUM("+COL_5+") FROM "+TABLE_NAME+" WHERE "+ COL_4+" LIKE '"+month+"%'",null);
+    }
+
+    public  Cursor getDataByCost(String cost)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+COL_5+"='"+cost+"'",null);
+    }
+
 }

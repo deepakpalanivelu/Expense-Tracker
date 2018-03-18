@@ -41,7 +41,6 @@ public class detailedExpenseView extends AppCompatActivity {
 
         Intent intent = getIntent();
         final String id=intent.getStringExtra("id_1");
-        Log.d("id name here",id);
 
         String contents = intent.getStringExtra("data_values");
         String[] values = contents.split("\\n");
