@@ -73,6 +73,8 @@ public class parseSMS extends AppCompatActivity {
         }
         while (res.moveToNext()) {
             StringBuffer entry = new StringBuffer();
+            entry.append("id"+res.getString(0)+"\n");
+
             entry.append("Bank : " + res.getString(1) + "\n");
             entry.append("Location : " + res.getString(2) + "\n");
             entry.append("Date : " + res.getString(3) + "\n");
@@ -109,6 +111,7 @@ public class parseSMS extends AppCompatActivity {
         Cursor cursor = getContentResolver().query(uri, new String[]{"_id", "address", "date", "body"}, null, null, null);
         cursor.moveToFirst();
         while (cursor.moveToNext()) {
+            String id=cursor.getString(0);
             String address = cursor.getString(1);
             String date = cursor.getString(2);
             String body = cursor.getString(3);
