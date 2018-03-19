@@ -37,12 +37,21 @@ public class PieActivity extends AppCompatActivity {
         DBHelper db = new DBHelper(this);
         Cursor cur = db.getExpenseByCategory();
 
+
+        while(cur.moveToNext())
+        {
+            StringBuffer sb=new StringBuffer();
+            sb.append(cur.getString(0)+"\n");
+            sb.append(cur.getString(1));
+            Log.d("value here is ",sb.toString());
+//            ONLY 0 value is being shown for all categories, sum is not happening, once
+        }
+
         List<Entry> entries = new ArrayList<Entry>();
         entries.add(new Entry(4f, 0));
         entries.add(new Entry(1f, 1));
         entries.add(new Entry(3f, 2));
         entries.add(new Entry(2f, 3));
-
 
         pieChart.setDescription("Expense by category");
         pieChart.setRotationEnabled(true);
@@ -78,6 +87,7 @@ public class PieActivity extends AppCompatActivity {
         legend.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
         PieData data = new PieData(labels, dataset);
         pieChart.setData(data);
+        pieChart.animateY(5000);
 
     }
 
