@@ -15,12 +15,7 @@
     android:orientation="vertical"
         android:background="#eee">
 
-<<<<<<< HEAD
         <GridLayout
-=======
-        <TextView
-            android:id="@+id/accounts"
->>>>>>> b0ca9475aebc45887664dc709f2a8939f8785565
             android:layout_width="match_parent"
             android:layout_height="84dp"
             android:background="#fff"
@@ -127,48 +122,7 @@
         android:layout_height="213dp"
         android:layout_marginTop="70dp">
 
-<<<<<<< HEAD
         </com.github.mikephil.charting.charts.BarChart>
-=======
-
-    <ListView
-    android:id="@+id/expenseslist"
-    android:layout_width="353dp"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="30dp" />
-
-    <TextView
-    android:id="@+id/viewTransaction"
-    android:layout_width="354dp"
-    android:layout_height="60dp"
-    android:clickable="true"
-    android:onClick="perform_action"
-    android:text="All Transactions" />
-
-        <com.github.mikephil.charting.charts.PieChart
-            android:layout_width="353dp"
-            android:layout_height="213dp"
-            android:layout_marginTop="60dp"
-            android:id="@+id/budget_chart">
-
-        </com.github.mikephil.charting.charts.PieChart>
-
-        <TextView
-            android:id="@+id/categoryBudget"
-            android:layout_width="354dp"
-            android:layout_height="60dp"
-            android:clickable="true"
-            android:onClick="perform_action_budgets"
-            android:text="More info" />
-
-    <!--<com.github.mikephil.charting.charts.BarChart-->
-    <!--android:id="@+id/budgetgraph"-->
-    <!--android:layout_width="353dp"-->
-    <!--android:layout_height="213dp"-->
-    <!--android:layout_marginTop="70dp">-->
-
-    <!--</com.github.mikephil.charting.charts.BarChart>-->
->>>>>>> b0ca9475aebc45887664dc709f2a8939f8785565
 
     <!--<Button-->
     <!--android:id="@+id/pie"-->
