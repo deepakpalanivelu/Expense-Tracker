@@ -46,7 +46,11 @@
             android:label="@string/title_activity_pie"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".detailedExpenseView" />
-        <activity android:name=".bar_chart_day"></activity>
+        <activity android:name=".bar_chart_day" />
+        <activity
+            android:name=".ExpenseActivity"
+            android:label="@string/title_activity_expense"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -127,4 +127,10 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+COL_5+"='"+cost+"'",null);
     }
 
+//    public Cursor getCost(String cost) {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        return db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+COL_5+"='"+cost+"'",null);
+//
+//    }
+
 }

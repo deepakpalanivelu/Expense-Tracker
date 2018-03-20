@@ -7,6 +7,7 @@ import com.github.mikephil.charting.data.BarEntry;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -25,9 +26,11 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,6 +52,8 @@ public class HomeActivity extends AppCompatActivity
     private ImageButton smsTrigger,addTrigger;
     private Button pieChart;
     private static final int REQUEST_READ_SMS = 2;
+    private TextView allTransactions;
+    private EditText accountTile ;
     BarChart barChart;
     ArrayList<String> dates;
     ArrayList<String> months;
@@ -127,7 +132,7 @@ ArrayList<String> ids;
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        addTrigger = findViewById(R.id.add);
+
 
 
 
@@ -138,13 +143,13 @@ ArrayList<String> ids;
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_SMS}, 1);
         }
 
-        addTrigger.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, ManualAdd.class);
-                startActivityForResult(intent,0);
-            }
-        });
+//        addTrigger.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(HomeActivity.this, ManualAdd.class);
+//                startActivityForResult(intent,0);
+//            }
+//        });
 
         populateexpenses();
         createRandomBarGraph("2016/05/05", "2016/06/01");
@@ -157,34 +162,52 @@ ArrayList<String> ids;
                 startActivityForResult(intent,0);
             }
         });
+        accountTile =(EditText) findViewById(R.id.accounts);
+        accountTile.setText("Accounts \n Cash = $360");
+//        allTransactions = findViewById(R.id.viewTransaction);
+//        allTransactions.setOnClickListener(new View.onClickListener() {
+//
+//        });
 
 //--------------------
-        smsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                inside the onclick of a list item
-
-                String itemAtPosition = smsListView.getItemAtPosition(position).toString();
-                String id_1=ids.get(position);
-
-//                System.out.println(itemAtPosition);
-                Intent intent = new Intent(getApplicationContext(), detailedExpenseView.class);
-                    intent.putExtra("id_1",id_1);
-                    intent.putExtra("data_values",itemAtPosition);
-                startActivity(intent);
-            }
-        });
+//        smsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+////                inside the onclick of a list item
+//
+//                String itemAtPosition = smsListView.getItemAtPosition(position).toString();
+//                String id_1=ids.get(position);
+//
+////                System.out.println(itemAtPosition);
+//                Intent intent = new Intent(getApplicationContext(), detailedExpenseView.class);
+//                    intent.putExtra("id_1",id_1);
+//                    intent.putExtra("data_values",itemAtPosition);
+//                startActivity(intent);
+//            }
+//        });
 
 //-------------------------
-        pieChart = findViewById(R.id.pie);
-        pieChart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), PieActivity.class);
-                startActivity(intent);
-            }
-        });
+//        pieChart = findViewById(R.id.pie);
+//        pieChart.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(getApplicationContext(), PieActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
+
+
+
+    }
+    public void perform_action(View v)
+    {   allTransactions = (TextView) findViewById(R.id.viewTransaction);
+        allTransactions.setTextColor(Color.BLUE);
+        Intent intent = new Intent(getApplicationContext(),ExpenseActivity.class);
+            startActivity(intent);
+
+
+        //assign the textview forecolor
 
     }
 
@@ -275,8 +298,8 @@ ArrayList<String> ids;
 
 
         ids=new ArrayList<>();
-
-        while (res.moveToNext()) {
+        int i =0;
+        while (res.moveToNext() && i < 3) {
             StringBuffer entry = new StringBuffer();
             ids.add(res.getString(0));
 
@@ -285,7 +308,7 @@ ArrayList<String> ids;
             entry.append(res.getString(1) + " - "+res.getString(3)+"\n");
             entry.append( res.getString(5) + "\n");
             entry.append(res.getString(6));
-
+            i++;
             smsMessagesList.add(entry.toString());
         }
         CustomListAdapter adapter=new CustomListAdapter(this, smsMessagesList, imgid);
@@ -416,39 +439,39 @@ ArrayList<String> ids;
 
     public void createRandomBarGraph(String Date1, String Date2){
 
-        /*SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
-
-        try {
-            Date date1 = simpleDateFormat.parse(Date1);
-            Date date2 = simpleDateFormat.parse(Date2);
-
-            Calendar mDate1 = Calendar.getInstance();
-            Calendar mDate2 = Calendar.getInstance();
-            mDate1.clear();
-            mDate2.clear();
-
-            mDate1.setTime(date1);
-            mDate2.setTime(date2);
-
-            dates = new ArrayList<>();
-            dates = getList(mDate1,mDate2);
-
-            barEntries = new ArrayList<>();
-            float max = 0f;
-            float value = 0f;
-            random = new Random();
-            for(int j = 0; j< dates.size();j++){
-                max = 10f;
-                value = random.nextFloat();
-                Log.d(TAG, Float.toString(value));
-                value = value * max;
-                Log.d(TAG, "After " + Float.toString(value));
-                barEntries.add(new BarEntry(value,j));
-            }
-
-        }catch(ParseException e){
-            e.printStackTrace();
-        }*/
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+//
+//        try {
+//            Date date1 = simpleDateFormat.parse(Date1);
+//            Date date2 = simpleDateFormat.parse(Date2);
+//
+//            Calendar mDate1 = Calendar.getInstance();
+//            Calendar mDate2 = Calendar.getInstance();
+//            mDate1.clear();
+//            mDate2.clear();
+//
+//            mDate1.setTime(date1);
+//            mDate2.setTime(date2);
+//
+//            dates = new ArrayList<>();
+//            dates = getList(mDate1,mDate2);
+//
+//            barEntries = new ArrayList<>();
+//            float max = 0f;
+//            float value = 0f;
+//            random = new Random();
+//            for(int j = 0; j< dates.size();j++){
+//                max = 100f;
+//                value = random.nextFloat();
+//                Log.d(TAG, Float.toString(value));
+//                value = value * max;
+//                Log.d(TAG, "After " + Float.toString(value));
+//                barEntries.add(new BarEntry(value,j));
+//            }
+//
+//        }catch(ParseException e){
+//            e.printStackTrace();
+//        }
         DBHelper dbHelper = new DBHelper(this);
 
         Cursor res = dbHelper.getAllData();
@@ -474,7 +497,7 @@ ArrayList<String> ids;
 
             if(res.getString(4).length() != 0 && res.getString(3).length() != 0 )
             {
-                barEntries.add(new BarEntry(Float.parseFloat(res.getString(4).replace("$","")),i));
+                barEntries.add(new BarEntry(Float.parseFloat(res.getString(4).replace("$","").replace(",","")),i));
                 dates.add(res.getString(3).replace(",",""));
             }
             i++;
@@ -483,8 +506,8 @@ ArrayList<String> ids;
         }
 
 
-        //Collections.reverse(dates);
-        //Collections.reverse(barEntries);
+//        //Collections.reverse(dates);
+//        //Collections.reverse(barEntries);
         for(int a = 0; a < dates.size();a++) {
             Log.d("reverse" , dates.get(a));
         }
@@ -522,14 +545,14 @@ ArrayList<String> ids;
 
 
 
-//    public ArrayList<String> getList(Calendar startDate, Calendar endDate){
-//        ArrayList<String> list = new ArrayList<String>();
-//        while(startDate.compareTo(endDate)<=0){
-//            list.add(getDate(startDate));
-//            startDate.add(Calendar.DAY_OF_MONTH,1);
-//        }
-//        return list;
-//    }
+    public ArrayList<String> getList(Calendar startDate, Calendar endDate){
+        ArrayList<String> list = new ArrayList<String>();
+        while(startDate.compareTo(endDate)<=0){
+            list.add(getDate(startDate));
+            startDate.add(Calendar.DAY_OF_MONTH,1);
+        }
+        return list;
+    }
 
     public String getDate(Calendar cld){
         String curDate = cld.get(Calendar.YEAR) + "/" + (cld.get(Calendar.MONTH) + 1) + "/"
