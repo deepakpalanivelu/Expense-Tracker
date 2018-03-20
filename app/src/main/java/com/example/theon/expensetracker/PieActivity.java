@@ -11,7 +11,6 @@ import android.util.Log;
 
 import com.example.theon.expensetracker.Database.DBHelper;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -25,7 +24,11 @@ public class PieActivity extends AppCompatActivity {
     private static String TAG = "PieActivity";
 
 
-    PieChart pieChart;
+    PieChart pieChart1;
+    PieChart pieChart2;
+    PieChart pieChart3;
+    PieChart pieChart4;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,41 +36,42 @@ public class PieActivity extends AppCompatActivity {
         setContentView(R.layout.content_pie);
         Log.d(TAG, "onCreate: starting to create chart");
 
-        pieChart = (PieChart) findViewById(R.id.idPieChart);
+        pieChart1 = (PieChart) findViewById(R.id.budget_month_chart);
+        pieChart2 = (PieChart) findViewById(R.id.budget_dinner_chart);
+        pieChart3 = (PieChart) findViewById(R.id.budget_gas_chart);
+        pieChart4 = (PieChart) findViewById(R.id.budget_others_chart);
         DBHelper db = new DBHelper(this);
         Cursor cur = db.getExpenseByCategory();
+        createBudgetGraph(pieChart1,"March Budget","#2B4A6F" );
+        createBudgetGraph(pieChart2,"Dinner","#A23645" );
+        createBudgetGraph(pieChart3,"Gas","#93A63A");
+        createBudgetGraph(pieChart4,"Others","#2B4A6F");
+
+    }
 
 
-        while(cur.moveToNext())
-        {
-            StringBuffer sb=new StringBuffer();
-            sb.append(cur.getString(0)+"\n");
-            sb.append(cur.getString(1));
-            Log.d("value here is ",sb.toString());
-//            ONLY 0 value is being shown for all categories, sum is not happening, once
-        }
-
+    private void createBudgetGraph(PieChart pieChart, String Description, String color) {
         List<Entry> entries = new ArrayList<Entry>();
         entries.add(new Entry(4f, 0));
         entries.add(new Entry(1f, 1));
-        entries.add(new Entry(3f, 2));
-        entries.add(new Entry(2f, 3));
+//        entries.add(new Entry(3f, 2));
+//        entries.add(new Entry(2f, 3));
 
-        pieChart.setDescription("Expense by category");
+        pieChart.setDescription(Description);
         pieChart.setRotationEnabled(true);
         ArrayList<Integer> colours = new ArrayList<>();
-        colours.add(Color.parseColor("#2B4A6F"));
-        colours.add(Color.parseColor("#26715B"));
+        colours.add(Color.parseColor(color));
+        colours.add(Color.WHITE);
 
-        colours.add(Color.parseColor("#A23645"));
-        colours.add(Color.parseColor("#93A63A"));
+//        colours.add(Color.parseColor("#A23645"));
+//        colours.add(Color.parseColor("#93A63A"));
 
         pieChart.setUsePercentValues(true);
-        pieChart.setHoleColor(Color.BLACK);
+//        pieChart.setHoleColor(Color.BLACK);
         pieChart.setCenterTextColor(Color.WHITE);
-        pieChart.setHoleRadius(25f);
+        //pieChart.setHoleRadius(25f);
         pieChart.setTransparentCircleAlpha(0);
-        pieChart.setCenterText("Category");
+        pieChart.setCenterText("Budget");
         pieChart.setCenterTextSize(10);
 
         PieDataSet dataset = new PieDataSet(entries,"category");
@@ -78,18 +82,20 @@ public class PieActivity extends AppCompatActivity {
 
 
         ArrayList<String> labels = new ArrayList<String>();
-                labels.add("Dining");
-                labels.add("Entertainment");
-                labels.add("Other");
-                labels.add("Gas");
-        Legend legend = pieChart.getLegend();
-        legend.setForm(Legend.LegendForm.CIRCLE);
-        legend.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
+        labels.add(Description);
+        labels.add("Remaining");
+//        Legend legend = pieChart.getLegend();
+//        legend.setForm(Legend.LegendForm.CIRCLE);
+//        legend.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
         PieData data = new PieData(labels, dataset);
         pieChart.setData(data);
         pieChart.animateY(5000);
 
     }
+
+
+
+
 
 
 }
