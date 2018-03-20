@@ -163,7 +163,7 @@ public class parseSMS extends AppCompatActivity {
                 }
                 for(int i=0;i<al.size();i++) {
                     if(sms_each[i].contains("$")) {
-                        cost = sms_each[i];
+                        cost = sms_each[i].replace("$","").replace(",","");
                         break;
                     }
                 }

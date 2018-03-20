@@ -107,6 +107,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return res;
     }
 
+    public Cursor getBalance() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = db.rawQuery("SELECT COST FROM " +TABLE_NAME + " WHERE DATE LIKE '%March%'" , null);
+        return res;
+    }
+
     public Cursor getExpenseByCategory() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("SELECT " +COL_6+ ",SUM("+COL_5+") FROM " +TABLE_NAME+ " GROUP BY " +COL_6, null);

@@ -154,6 +154,26 @@ ArrayList<String> ids;
         populateexpenses();
         createRandomBarGraph("2016/05/05", "2016/06/01");
 
+
+        accountTile =(EditText) findViewById(R.id.accounts);
+        dbHelper = new DBHelper(this);
+
+        Cursor res = dbHelper.getAllData();
+        if(res.getCount()==0){
+            Log.d("DATABASE:","EMPTY!!");
+            return;
+        } else {
+            int cost = 0;
+            int i =0;
+            while (res.moveToNext() && i < 2) {
+                StringBuffer entry = new StringBuffer();
+                cost += Integer.parseInt(res.getString(0));
+            }
+            accountTile.setText("Accounts \nCurrent Spending = $"+cost);
+
+        }
+
+
         smsTrigger = findViewById(R.id.parsesms);
         smsTrigger.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,8 +182,7 @@ ArrayList<String> ids;
                 startActivityForResult(intent,0);
             }
         });
-        accountTile =(EditText) findViewById(R.id.accounts);
-        accountTile.setText("Accounts \n Cash = $360");
+        accountTile.setEnabled(false);
 //        allTransactions = findViewById(R.id.viewTransaction);
 //        allTransactions.setOnClickListener(new View.onClickListener() {
 //
@@ -237,10 +256,6 @@ ArrayList<String> ids;
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -253,7 +268,7 @@ ArrayList<String> ids;
 
         if (id == R.id.account) {
             // Handle the camera action
-        } else if (id == R.id.balance) {
+        } else if (id == R.id.balance || id == R.id.logout) {
             // handle logout here
             FirebaseAuth.getInstance().signOut();
             finish();
@@ -299,7 +314,7 @@ ArrayList<String> ids;
 
         ids=new ArrayList<>();
         int i =0;
-        while (res.moveToNext() && i < 3) {
+        while (res.moveToNext() && i < 2) {
             StringBuffer entry = new StringBuffer();
             ids.add(res.getString(0));
 
