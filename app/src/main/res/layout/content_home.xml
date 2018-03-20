@@ -108,7 +108,7 @@
         <TextView
             android:id="@+id/viewTransaction"
             android:layout_width="400dp"
-            android:layout_height="60dp"
+            android:layout_height="30dp"
             android:clickable="true"
             android:onClick="perform_action"
             android:text="All Transactions"
@@ -116,21 +116,39 @@
             android:layout_gravity="end"
             android:layout_marginRight="10dp"/>
 
-        <com.github.mikephil.charting.charts.PieChart
-            android:layout_width="353dp"
-            android:layout_height="213dp"
-            android:layout_marginTop="60dp"
-            android:id="@+id/budget_chart">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="234dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
 
-        </com.github.mikephil.charting.charts.PieChart>
 
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/budget_chart"
+                android:layout_width="410dp"
+                android:layout_height="213dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="#fff">
+
+            </com.github.mikephil.charting.charts.PieChart>
+
+
+        </RelativeLayout>
         <TextView
             android:id="@+id/categoryBudget"
-            android:layout_width="354dp"
-            android:layout_height="60dp"
+            android:layout_width="400dp"
+            android:layout_height="30dp"
             android:clickable="true"
             android:onClick="perform_action_budgets"
-            android:text="More info" />
+            android:text="More info"
+            android:textAlignment="viewEnd"
+            android:layout_gravity="end"
+            android:textColor="#555"
+            android:layout_marginRight="10dp"/>
 
         <!--<Button-->
         <!--android:id="@+id/pie"-->
