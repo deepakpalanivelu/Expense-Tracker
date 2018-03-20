@@ -1,6 +1,7 @@
 package com.example.theon.expensetracker;
 import com.example.theon.expensetracker.Database.DBHelper;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -38,9 +39,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
@@ -50,10 +54,11 @@ public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener  {
 
     private ImageButton smsTrigger,addTrigger;
-    private Button pieChart;
+    private PieChart pieChart;
     private static final int REQUEST_READ_SMS = 2;
     private TextView allTransactions;
-    private EditText accountTile ;
+    private TextView detailedBudget;
+    private TextView accountTile ;
     BarChart barChart;
     ArrayList<String> dates;
     ArrayList<String> months;
@@ -87,6 +92,7 @@ ArrayList<String> ids;
         setSupportActionBar(toolbar);
         select_date_month=(Spinner)findViewById(R.id.select_date_month);
         barChart = (BarChart) findViewById(R.id.bargraph);
+        pieChart = (PieChart) findViewById(R.id.budget_chart);
 
 
         ArrayAdapter<CharSequence> charSequenceArrayAdapter=ArrayAdapter.createFromResource(this,R.array.spinner_bargraph,android.R.layout.simple_spinner_item);
@@ -153,6 +159,7 @@ ArrayList<String> ids;
 
         populateexpenses();
         createRandomBarGraph("2016/05/05", "2016/06/01");
+        createBudgetGraph();
 
         smsTrigger = findViewById(R.id.parsesms);
         smsTrigger.setOnClickListener(new View.OnClickListener() {
@@ -162,7 +169,7 @@ ArrayList<String> ids;
                 startActivityForResult(intent,0);
             }
         });
-        accountTile =(EditText) findViewById(R.id.accounts);
+        accountTile =(TextView) findViewById(R.id.accounts);
         accountTile.setText("Accounts \n Cash = $360");
 //        allTransactions = findViewById(R.id.viewTransaction);
 //        allTransactions.setOnClickListener(new View.onClickListener() {
@@ -200,6 +207,50 @@ ArrayList<String> ids;
 
 
     }
+
+    private void createBudgetGraph() {
+        List<Entry> entries = new ArrayList<Entry>();
+        entries.add(new Entry(4f, 0));
+        entries.add(new Entry(1f, 1));
+//        entries.add(new Entry(3f, 2));
+//        entries.add(new Entry(2f, 3));
+
+        pieChart.setDescription("March Budget");
+        pieChart.setRotationEnabled(true);
+        ArrayList<Integer> colours = new ArrayList<>();
+        colours.add(Color.parseColor("#2B4A6F"));
+        colours.add(Color.WHITE);
+
+//        colours.add(Color.parseColor("#A23645"));
+//        colours.add(Color.parseColor("#93A63A"));
+
+        pieChart.setUsePercentValues(true);
+//        pieChart.setHoleColor(Color.BLACK);
+        pieChart.setCenterTextColor(Color.WHITE);
+        //pieChart.setHoleRadius(25f);
+        pieChart.setTransparentCircleAlpha(0);
+        pieChart.setCenterText("Budget");
+        pieChart.setCenterTextSize(10);
+
+        PieDataSet dataset = new PieDataSet(entries,"category");
+
+        dataset.setSliceSpace(2);
+        dataset.setValueTextSize(12);
+        dataset.setColors(colours);
+
+
+        ArrayList<String> labels = new ArrayList<String>();
+        labels.add("Monthly Budget");
+        labels.add("Remaining");
+//        Legend legend = pieChart.getLegend();
+//        legend.setForm(Legend.LegendForm.CIRCLE);
+//        legend.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
+        PieData data = new PieData(labels, dataset);
+        pieChart.setData(data);
+        pieChart.animateY(5000);
+
+    }
+
     public void perform_action(View v)
     {   allTransactions = (TextView) findViewById(R.id.viewTransaction);
         allTransactions.setTextColor(Color.BLUE);
@@ -208,6 +259,15 @@ ArrayList<String> ids;
 
 
         //assign the textview forecolor
+
+    }
+
+    public void perform_action_budgets(View v) {
+        detailedBudget = (TextView) findViewById(R.id.categoryBudget);
+        detailedBudget.setTextColor(Color.BLUE);
+        Intent intent = new Intent(getApplicationContext(),PieActivity.class);
+        startActivity(intent);
+
 
     }
 
@@ -501,9 +561,9 @@ ArrayList<String> ids;
                 dates.add(res.getString(3).replace(",",""));
             }
             i++;
-
-
         }
+
+
 
 
 //        //Collections.reverse(dates);

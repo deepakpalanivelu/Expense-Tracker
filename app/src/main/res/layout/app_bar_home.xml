@@ -23,3 +23,6 @@ tools:context="com.example.theon.expensetracker.HomeActivity">
 <include layout="@layout/content_home" />
 
 </android.support.design.widget.CoordinatorLayout>
+
+
+
