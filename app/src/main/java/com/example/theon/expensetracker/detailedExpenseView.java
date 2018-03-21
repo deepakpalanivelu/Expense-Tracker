@@ -46,7 +46,7 @@ public class detailedExpenseView extends AppCompatActivity {
         String[] values = contents.split("\\n");
 
         String location = values[0];
-        String cost = values[1];
+        String cost = "$"+values[1];
 
         String[] values1 = values[2].split("\\-");
         String bank = values1[0], date = values1[1];

@@ -42,18 +42,18 @@ public class PieActivity extends AppCompatActivity {
         pieChart4 = (PieChart) findViewById(R.id.budget_others_chart);
         DBHelper db = new DBHelper(this);
         Cursor cur = db.getExpenseByCategory();
-        createBudgetGraph(pieChart1,"March Budget","#2B4A6F" );
-        createBudgetGraph(pieChart2,"Dinner","#A23645" );
-        createBudgetGraph(pieChart3,"Gas","#93A63A");
-        createBudgetGraph(pieChart4,"Others","#2B4A6F");
+        createBudgetGraph(pieChart1,"March Budget","#93b2ff", 6f,1f );
+        createBudgetGraph(pieChart2,"Dinner","#ff9c91" , 2f,1f );
+        createBudgetGraph(pieChart3,"Gas","#93ffaf", 3f,1f );
+        createBudgetGraph(pieChart4,"Others","#ff93f7", 8f,1f );
 
     }
 
 
-    private void createBudgetGraph(PieChart pieChart, String Description, String color) {
+    private void createBudgetGraph(PieChart pieChart, String Description, String color, Float x, Float y) {
         List<Entry> entries = new ArrayList<Entry>();
-        entries.add(new Entry(4f, 0));
-        entries.add(new Entry(1f, 1));
+        entries.add(new Entry(x, 0));
+        entries.add(new Entry(y, 1));
 //        entries.add(new Entry(3f, 2));
 //        entries.add(new Entry(2f, 3));
 

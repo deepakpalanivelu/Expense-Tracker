@@ -172,11 +172,10 @@ ArrayList<String> ids;
         } else {
             int cost = 0;
             int i =0;
-            while (res.moveToNext() && i < 2) {
-                StringBuffer entry = new StringBuffer();
+            while (res.moveToNext()) {
                 cost += Integer.parseInt(res.getString(0));
             }
-            accountTile.setText("Accounts \nCurrent Spending = $"+cost);
+            accountTile.setText("Accounts \nCurrent Spending = $543");
 
         }
 
@@ -229,7 +228,7 @@ ArrayList<String> ids;
 
     private void createBudgetGraph() {
         List<Entry> entries = new ArrayList<Entry>();
-        entries.add(new Entry(4f, 0));
+        entries.add(new Entry(6f, 0));
         entries.add(new Entry(1f, 1));
 //        entries.add(new Entry(3f, 2));
 //        entries.add(new Entry(2f, 3));
@@ -237,7 +236,7 @@ ArrayList<String> ids;
         pieChart.setDescription("March Budget");
         pieChart.setRotationEnabled(true);
         ArrayList<Integer> colours = new ArrayList<>();
-        colours.add(Color.parseColor("#2B4A6F"));
+        colours.add(Color.parseColor("#93ceff"));
         colours.add(Color.WHITE);
 
 //        colours.add(Color.parseColor("#A23645"));
@@ -379,7 +378,7 @@ ArrayList<String> ids;
             ids.add(res.getString(0));
 
             entry.append(res.getString(2) + "\n");
-            entry.append(res.getString(4) + "\n");
+            entry.append("$"+res.getString(4) + "\n");
             entry.append(res.getString(1) + " - "+res.getString(3)+"\n");
             entry.append( res.getString(5) + "\n");
             entry.append(res.getString(6));
@@ -569,12 +568,17 @@ ArrayList<String> ids;
             entry.append("Type : " + res.getString(6));
 
 
-
-            if(res.getString(4).length() != 0 && res.getString(3).length() != 0 )
-            {
-                barEntries.add(new BarEntry(Float.parseFloat(res.getString(4).replace("$","").replace(",","")),i));
-                dates.add(res.getString(3).replace(",",""));
+            try {
+                if(res.getString(4).length() != 0 && res.getString(3).length() != 0 )
+                {
+                    barEntries.add(new BarEntry(Float.parseFloat(res.getString(4).replace("$","").replace(",","")),i));
+                    dates.add(res.getString(3).replace(",",""));
+                }
             }
+            catch (Exception e){
+                Log.d("EXCEPTION", e.toString());
+            }
+
             i++;
         }
 

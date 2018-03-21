@@ -85,7 +85,7 @@ public class ExpenseActivity extends AppCompatActivity {
             ids.add(res.getString(0));
 
             entry.append(res.getString(2) + "\n");
-            entry.append(res.getString(4) + "\n");
+            entry.append("$"+res.getString(4) + "\n");
             entry.append(res.getString(1) + " - "+res.getString(3)+"\n");
             entry.append( res.getString(5) + "\n");
             entry.append(res.getString(6));

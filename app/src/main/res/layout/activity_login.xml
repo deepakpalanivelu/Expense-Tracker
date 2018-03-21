@@ -1,5 +1,6 @@
 <?xml version = "1.0" encoding = "utf-8"?>
 <RelativeLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools = "http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height = "match_parent"
     android:paddingLeft= "@dimen/activity_horizontal_margin"
@@ -12,13 +13,36 @@
         android:id="@+id/tagLine"
         android:layout_width="500dp"
         android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:layout_gravity="center"
+        android:layout_marginTop="58dp"
         android:gravity="center"
-        android:layout_marginTop="22dp"
+        android:text=""
+        android:textSize="18dp" />
+    <TextView
+        android:id="@+id/tagLine1"
+        android:layout_width="500dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:gravity="center"
         android:text="@string/tagline"
         android:textSize="18dp" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_above="@+id/email_id"
+        android:layout_centerHorizontal="true"
+        android:adjustViewBounds="false"
+        android:scaleType="fitXY"
+        android:src="@drawable/icons" />
 
     <EditText
         android:id="@+id/email_id"
@@ -54,6 +78,7 @@
         android:layout_alignStart="@+id/pwd"
         android:layout_below="@+id/pwd"
         android:layout_marginTop="31dp"
+        android:background="#fff"
         android:text="@string/login" />
 
     <TextView

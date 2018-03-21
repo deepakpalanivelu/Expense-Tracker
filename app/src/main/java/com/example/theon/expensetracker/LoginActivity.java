@@ -96,24 +96,24 @@ public class LoginActivity extends Activity  {
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
-        onLoginSuccess();
-//        firebaseAuth.signInWithEmailAndPassword(email,pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//            @Override
-//            public void onComplete(@NonNull Task<AuthResult> task) {
-//                if(task.isSuccessful()) {
-//                    Log.d(TAG, "SignInSuccess");
-//                    FirebaseUser user =  firebaseAuth.getCurrentUser();
-//                    onLoginSuccess();
-//                }
-//
-//                else
-//                {
-//                    onLoginFailed();
-//                }
-//
-//                progressDialog.dismiss();
-//            }
-//        });
+        //onLoginSuccess();
+        firebaseAuth.signInWithEmailAndPassword(email,pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()) {
+                    Log.d(TAG, "SignInSuccess");
+                    FirebaseUser user =  firebaseAuth.getCurrentUser();
+                    onLoginSuccess();
+                }
+
+                else
+                {
+                    onLoginFailed();
+                }
+
+                progressDialog.dismiss();
+            }
+        });
 
 
 
